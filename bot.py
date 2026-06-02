@@ -1,288 +1,268 @@
 import telebot
 from telebot import types
 from datetime import datetime
-import random
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-token = os.getenv("TOKEN")
+bot = telebot.TeleBot(os.getenv("TOKEN"))
 
-bot = telebot.TeleBot(token)
+
+
+career_data = {
+    "ml": {
+        "name": "Machine Learning",
+        "roadmap": "https://roadmap.sh/ai-engineer",
+        "resources": [
+            "Book: Hands-On ML by Aurelien Geron",
+            "Course: Andrew Ng ML (Coursera)",
+            "PDF: ML Cheatsheet",
+            "Link: scikit-learn docs - scikit-learn.org",
+            "Link: TensorFlow tutorials - tensorflow.org"
+        ]
+    },
+    "web": {
+        "name": "Web Development",
+        "roadmap": "https://roadmap.sh/full-stack",
+        "resources": [
+            "Book: Eloquent JavaScript",
+            "Course: The Odin Project (theodinproject.com)",
+            "PDF: Web Dev Checklist",
+            "Link: MDN Web Docs - developer.mozilla.org",
+            "Link: freeCodeCamp - freecodecamp.org"
+        ]
+    }
+}
+
+notes_data = {
+    "3rd": {
+        "name": "3rd Semester",
+        "subjects": {
+            "maths": "Mathematics",
+            "dsa": "Data Structures & Algorithms",
+            "java": "Java Programming"
+        }
+    },
+    "4th": {
+        "name": "4th Semester",
+        "subjects": {
+            "maths": "Mathematics",
+            "dsa": "Data Structures & Algorithms",
+            "java": "Java Programming"
+        }
+    }
+}
+
+subject_pdfs = {
+    "3rd_maths": [
+        "http://example.com/3rd_maths_notes.pdf",
+        "http://example.com/3rd_maths_practice.pdf"
+    ],
+    "3rd_dsa": [
+        "http://example.com/3rd_dsa_notes.pdf",
+        "http://example.com/3rd_dsa_lab.pdf"
+    ],
+    "3rd_java": [
+        "http://example.com/3rd_java_notes.pdf",
+        "http://example.com/3rd_java_practical.pdf"
+    ],
+    "4th_maths": [
+        "http://example.com/4th_maths_notes.pdf",
+        "http://example.com/4th_maths_practice.pdf"
+    ],
+    "4th_dsa": [
+        "http://example.com/4th_dsa_notes.pdf",
+        "http://example.com/4th_dsa_lab.pdf"
+    ],
+    "4th_java": [
+        "http://example.com/4th_java_notes.pdf",
+        "http://example.com/4th_java_assignments.pdf"
+    ]
+}
+
+
+
+def main_menu_kb():
+    mk = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+    for b in ["Career", "Notes", "GitHub", "Time", "About", "Help"]:
+        mk.add(types.KeyboardButton(b))
+    return mk
+
 
 
 @bot.message_handler(commands=['start'])
-def start(message):
-
-    markup = types.ReplyKeyboardMarkup(
-        resize_keyboard=True,
-        row_width=2
-    )
-
-    buttons = [
-        "AI Chat",
-        "Weather",
-        "Notes",
-        "Todo",
-        "GitHub",
-        "Joke",
-        "Movies",
-        "Quote",
-        "Date",
-        "Time",
-        "About Me",
-        "Help"
-    ]
-
-    for btn in buttons:
-        markup.add(types.KeyboardButton(btn))
-
-    welcome_text = """
-*Welcome to Telegro AI Assistant*
-
-━━━━━━━━━━━━━━━━━━━
-
->> Hello!
-
-I'm your personal Telegram assistant.
-
-    Features Available:
-
-    AI Chat
-    Weather
-    Notes
-    Todo List
-    GitHub
-    Jokes
-    Movies
-    Quotes
-    Date & Time
-
-━━━━━━━━━━━━━━━━━━━
-
->>  Created by Subham Pathak
->>  Powered by Python
-
-Select any option below.
-"""
-
+def cmd_start(msg):
     bot.send_message(
-        message.chat.id,
-        welcome_text,
-        parse_mode="Markdown",
-        reply_markup=markup
+        msg.chat.id,
+        "Hey, press /start to see everything I can do.\n\n"
+        "This bot helps you with:\n"
+        "- Career roadmaps + resources\n"
+        "- Semester notes (PDFs)\n"
+        "- GitHub, time, and more\n\n"
+        "Just hit /start and the menu will show up.",
+        reply_markup=main_menu_kb()
     )
+    bot.set_my_commands([
+        types.BotCommand("start", "Start the bot"),
+        types.BotCommand("notes", "Semester-wise notes"),
+        types.BotCommand("career", "Career resources"),
+        types.BotCommand("help", "All commands"),
+    ])
+
+
 
 @bot.message_handler(commands=['help'])
-def help_command(message):
-    bot.reply_to(
-        message,
-        """
-    AVAILABLE COMMANDS
-
-/start      - Start Bot
-/help       - Show Commands
-/name       - Creator Name
-/address    - Address
-/about      - About Bot
-/date       - Current Date
-/time       - Current Time
-/joke       - Random Joke
-/quote      - Motivation Quote
-/college    - College Name
-/course     - Course
-/skills     - Skills
-/contact    - Contact Info
-        """
-    )
-
-
-@bot.message_handler(commands=['name'])
-def name(message):
-    bot.reply_to(message, "Creator: Subham Pathak")
-
-
-@bot.message_handler(commands=['address'])
-def address(message):
-    bot.reply_to(
-        message,
-        "Rowta, Udalguri District, Assam, India"
-    )
-
-
-@bot.message_handler(commands=['about'])
-def about(message):
-    bot.reply_to(
-        message,
-        "Telegro AI Assistant\nCreated using Python and TeleBot."
-    )
-
-
-@bot.message_handler(commands=['college'])
-def college(message):
-    bot.reply_to(
-        message,
-        "Central Institute of Technology, Kokrajhar"
-    )
-
-
-@bot.message_handler(commands=['course'])
-def course(message):
-    bot.reply_to(
-        message,
-        "Computer Science and Engineering"
-    )
-
-
-@bot.message_handler(commands=['skills'])
-def skills(message):
-    bot.reply_to(
-        message,
-        """
-Skills
-
-• Python
-• Flask
-• FastAPI
-• HTML
-• CSS
-• JavaScript
-• Machine Learning
-• Deep Learning
-• Git & GitHub
-"""
-    )
-
-
-@bot.message_handler(commands=['contact'])
-def contact(message):
-    bot.reply_to(
-        message,
-        "Contact: lastw5232@gmail.com"
-    )
-
-
-@bot.message_handler(commands=['date'])
-def date(message):
-    bot.reply_to(
-        message,
-        f"{datetime.now().strftime('%d-%m-%Y')}"
-    )
-
-
-@bot.message_handler(commands=['time'])
-def time(message):
-    bot.reply_to(
-        message,
-        f"{datetime.now().strftime('%H:%M:%S')}"
+def cmd_help(msg):
+    bot.reply_to(msg,
+        "/start  - Start + show menu\n"
+        "/notes  - Browse notes by semester\n"
+        "/career - Career roadmaps & resources\n"
+        "/help   - This message\n\n"
+        "Keyboard buttons:\n"
+        "Career, Notes, GitHub, Time, About, Help"
     )
 
 
 
-@bot.message_handler(commands=['joke'])
-def joke(message):
-
-    jokes = [
-        "Why do programmers prefer dark mode? Because light attracts bugs!",
-        "Python is my favorite snake.",
-        "Debugging is like being a detective in a crime movie where you're also the criminal.",
-        "There are 10 kinds of people: those who understand binary and those who don't."
-    ]
-
-    bot.reply_to(message, random.choice(jokes))
+@bot.message_handler(commands=['notes'])
+def cmd_notes(msg):
+    show_notes_menu(msg)
 
 
-@bot.message_handler(commands=['quote'])
-def quote(message):
 
-    quotes = [
-        "Success comes from consistency.",
-        "Discipline beats motivation.",
-        "Small progress is still progress.",
-        "Never stop learning.",
-        "Dream big. Start small. Act now."
-    ]
-
-    bot.reply_to(message, random.choice(quotes))
+@bot.message_handler(commands=['career'])
+def cmd_career(msg):
+    show_career_menu(msg)
 
 
-@bot.message_handler(func=lambda message: True)
-def handle_buttons(message):
 
-    text = message.text
+def show_career_menu(msg_or_id):
+    chat_id = msg_or_id.chat.id if hasattr(msg_or_id, 'chat') else msg_or_id
+    mk = types.InlineKeyboardMarkup(row_width=2)
+    mk.add(
+        types.InlineKeyboardButton("Machine Learning", callback_data="c_ml"),
+        types.InlineKeyboardButton("Web Development", callback_data="c_web"),
+        types.InlineKeyboardButton("<< Back", callback_data="c_back")
+    )
+    bot.send_message(chat_id, "== Career / Goals ==\n\nPick a field:", reply_markup=mk)
 
-    if text == "AI Chat":
-        bot.reply_to(
-            message,
-            "AI Chat feature coming soon!"
+def show_career_detail(call, key):
+    c = career_data[key]
+    lines = [f"== {c['name']} ==\n"]
+    lines.append("> Roadmap:")
+    lines.append(f"  {c['roadmap']}")
+    lines.append("")
+    lines.append("> Resources:")
+    for r in c["resources"]:
+        lines.append(f"  - {r}")
+    lines.append("")
+    
+
+    mk = types.InlineKeyboardMarkup()
+    mk.add(types.InlineKeyboardButton("<< Back", callback_data="c_back"))
+    bot.edit_message_text("\n".join(lines), call.message.chat.id, call.message.message_id, reply_markup=mk, disable_web_page_preview=True)
+
+
+
+def show_notes_menu(msg_or_id):
+    chat_id = msg_or_id.chat.id if hasattr(msg_or_id, 'chat') else msg_or_id
+    mk = types.InlineKeyboardMarkup(row_width=2)
+    mk.add(
+        types.InlineKeyboardButton("3rd Semester", callback_data="n_3rd"),
+        types.InlineKeyboardButton("4th Semester", callback_data="n_4th"),
+        types.InlineKeyboardButton("<< Back", callback_data="n_back")
+    )
+    bot.send_message(chat_id, "== Notes Library ==\n\nPick your semester:", reply_markup=mk)
+
+def show_subjects(call, sem):
+    info = notes_data[sem]
+    mk = types.InlineKeyboardMarkup(row_width=1)
+    for sk, sn in info["subjects"].items():
+        mk.add(types.InlineKeyboardButton(sn, callback_data=f"s_{sem}_{sk}"))
+    mk.add(types.InlineKeyboardButton("<< Back to semesters", callback_data="n_back"))
+    bot.edit_message_text(
+        f"== {info['name']} ==\n\nPick a subject:",
+        call.message.chat.id, call.message.message_id,
+        reply_markup=mk
+    )
+
+def show_pdfs(call, sem, sub):
+    info = notes_data[sem]
+    sub_name = info["subjects"][sub]
+    pdf_key = f"{sem}_{sub}"
+    pdfs = subject_pdfs.get(pdf_key, ["(no PDFs added yet)"])
+    lines = [f"== {sub_name} ({info['name']}) ==\n"]
+    lines.append("> PDFs:")
+    for p in pdfs:
+        lines.append(f"  - {p}")
+    lines.append("")
+    
+
+    mk = types.InlineKeyboardMarkup()
+    mk.add(types.InlineKeyboardButton("<< Back to subjects", callback_data=f"b_{sem}"))
+    bot.edit_message_text(
+        "\n".join(lines),
+        call.message.chat.id, call.message.message_id,
+        reply_markup=mk, disable_web_page_preview=True
+    )
+
+
+
+@bot.callback_query_handler(func=lambda c: True)
+def handle_cb(call):
+    d = call.data
+
+    
+    if d == "c_ml":
+        show_career_detail(call, "ml")
+    elif d == "c_web":
+        show_career_detail(call, "web")
+    elif d == "c_back":
+        show_career_menu(call.message.chat.id)
+
+    elif d == "n_back":
+        show_notes_menu(call.message.chat.id)
+    elif d.startswith("n_"):
+        sem = d.split("_", 1)[1]
+        show_subjects(call, sem)
+    elif d.startswith("b_"):
+        sem = d.split("_", 1)[1]
+        show_subjects(call, sem)
+    elif d.startswith("s_"):
+        parts = d.split("_")
+        if len(parts) == 3:
+            show_pdfs(call, parts[1], parts[2])
+
+    bot.answer_callback_query(call.id)
+
+
+@bot.message_handler(func=lambda m: True)
+def handle_text(msg):
+    t = msg.text
+
+    if t == "Career":
+        show_career_menu(msg)
+    elif t == "Notes":
+        show_notes_menu(msg)
+    elif t == "GitHub":
+        bot.reply_to(msg, "My GitHub:\nhttps://github.com/")
+    elif t == "Time":
+        now = datetime.now()
+        bot.reply_to(msg, now.strftime("%A, %d %B %Y\n%I:%M:%S %p"))
+    elif t == "About":
+        bot.reply_to(msg,
+            "Subham Pathak\n"
+            "3rd year CSE\n"
+            "CIT Kokrajhar\n"
+            "AI/ML + Backend"
         )
-
-    elif text == "Weather":
-        bot.reply_to(
-            message,
-            "Weather API will be added soon."
-        )
-
-    elif text == "Notes":
-        bot.reply_to(
-            message,
-            "Notes feature coming soon."
-        )
-
-    elif text == "Todo":
-        bot.reply_to(
-            message,
-            "Todo Manager coming soon."
-        )
-
-    elif text == "GitHub":
-        bot.reply_to(
-            message,
-            "GitHub Profile: https://github.com/"
-        )
-
-    elif text == "Joke":
-        joke(message)
-
-    elif text == "Movies":
-        bot.reply_to(
-            message,
-            "Movie recommendations coming soon."
-        )
-
-    elif text == "Quote":
-        quote(message)
-
-    elif text == "Date":
-        date(message)
-
-    elif text == "Time":
-        time(message)
-
-    elif text == "About Me":
-        bot.reply_to(
-            message,
-            """
-👤 Subham Pathak
-
-    CSE Student
-    Central Institute of Technology, Kokrajhar
-    Interested in AI/ML
-    Backend Development
-    Aspiring Game Developer
-"""
-        )
-
-    elif text == "Help":
-        help_command(message)
-
+    elif t == "Help":
+        cmd_help(msg)
     else:
-        bot.reply_to(
-            message,
-            "I don't understand that command.\nUse /help"
-        )
+        bot.reply_to(msg, "I dont understand. Type /help")
 
 
-print("Bot is running...")
+
+print("Bot running...")
 bot.infinity_polling()
