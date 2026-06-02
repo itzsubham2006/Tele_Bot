@@ -10,3 +10,7 @@ start_bot - Shortcut.lnk
 
 
 start_bot.vbs
+
+Notes
+
+__pycache__/
