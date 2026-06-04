@@ -31,7 +31,8 @@ career_data = {
     },
     "web": {
         "name": "Web Development",
-        "roadmap": "",
+        "roadmap": "Frontend --- >\n html/css/js -> LocalStorage / SessionStorage -> ts -> tailwind css -> react.js tsx -> react router -> Pagination / Filtering-> redux toolkit / zustand -> TanStack Query-> react testing -> framer motion -> next.js -> threejs\n\n Backend --->\njava -> DSA ->Spring boot -> Spring JPA -> MySQL/mongoDb ->  spring Web -> postman -> tomcat -> Kafka  or RabbitMQ -> Redis -> Docker-> Spring Security (JWT and oauth2) -> System Design",
+        
         "resources": [
             "Book: Eloquent JavaScript",
             "Course: The Odin Project (theodinproject.com)",
@@ -123,11 +124,12 @@ def main_menu_kb():
 def cmd_start(msg):
     bot.send_message(
         msg.chat.id,
-        "Hey, press /start to see everything I can do.\n\n"
-        "This bot helps you with:\n"
+        "Hey, I am tele_bot made by Subham Pathak, press /start to see everything I can do.\n\n"
+        "I can helps you with:\n"
         "- Career roadmaps + resources\n"
         "- Semester notes (PDFs)\n"
-        "- GitHub, time, and more\n\n"
+        "- You can check my GitHub, about and more\n\n"
+        "- More features will be added soon\n\n"
         "Just hit /start and the menu will show up.",
         reply_markup=main_menu_kb()
     )
@@ -265,16 +267,16 @@ def handle_text(msg):
     elif t == "Notes":
         show_notes_menu(msg)
     elif t == "GitHub":
-        bot.reply_to(msg, "My GitHub:\nhttps://github.com/")
+        bot.reply_to(msg, "My GitHub:\nhttps://github.com/itzsubham2006")
     elif t == "Time":
         now = datetime.now()
         bot.reply_to(msg, now.strftime("%A, %d %B %Y\n%I:%M:%S %p"))
     elif t == "About":
         bot.reply_to(msg,
-            "Subham Pathak\n"
-            "3rd year CSE\n"
-            "CIT Kokrajhar\n"
-            "AI/ML + Backend"
+            ">> Owner : Subham Pathak\n"
+            ">> 3rd year CSE\n"
+            ">> CIT Kokrajhar\n"
+            ">> AI/ML"
         )
     elif t == "Help":
         cmd_help(msg)
@@ -283,3 +285,5 @@ def handle_text(msg):
 
 print("Bot is running heheheheheeee...")
 bot.infinity_polling()
+
+
