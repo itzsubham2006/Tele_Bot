@@ -114,41 +114,76 @@ subject_files = {
     ],
 }
 
-def main_menu_kb():
-    mk = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
-    for b in ["Career", "Notes", "GitHub", "Time", "About", "Help"]:
-        mk.add(types.KeyboardButton(b))
-    return mk
-
 @bot.message_handler(commands=['start'])
 def cmd_start(msg):
     bot.send_message(
         msg.chat.id,
-        "Hey, I am tele_bot made by Subham Pathak, press /start to see everything I can do.\n\n"
-        "I can helps you with:\n"
-        "- Career roadmaps + resources\n"
-        "- Semester notes (PDFs)\n"
-        "- You can check my GitHub, about and more\n\n"
-        "- More features will be added soon\n\n"
-        "Just hit /start and the menu will show up.",
-        reply_markup=main_menu_kb()
+        "Hey, I am tele_bot :)\n\n"
+        "I can help you with:\n"
+        "- Career roadmaps + resources  --> /career\n"
+        "- Semester notes (PDFs)        --> /notes\n"
+        "- Check my GitHub              --> /github\n"
+        "- About me                     --> /about\n"
+        "- Date & Time                  --> /time\n"
+        "- More features coming soon.\n\n"
+        "Type /help to see all commands."
     )
     bot.set_my_commands([
         types.BotCommand("start", "Start the bot"),
         types.BotCommand("notes", "Semester-wise notes"),
         types.BotCommand("career", "Career resources"),
+        types.BotCommand("about", "About the creator"),
+        types.BotCommand("github", "GitHub profile"),
+        types.BotCommand("time", "Current date & time"),
         types.BotCommand("help", "All commands"),
     ])
 
 @bot.message_handler(commands=['help'])
 def cmd_help(msg):
     bot.reply_to(msg,
-        "/start  - Start + show menu\n"
+        "/start  - Start the bot\n"
         "/notes  - Browse notes by semester\n"
         "/career - Career roadmaps & resources\n"
-        "/help   - This message\n\n"
-        "Keyboard buttons:\n"
-        "Career, Notes, GitHub, Time, About, Help"
+        "/about  - About the creator\n"
+        "/github - GitHub profile link\n"
+        "/time   - Current date & time\n"
+        "/help   - This message"
+    )
+
+@bot.message_handler(commands=['about'])
+def cmd_about(msg):
+    about_text = (
+      
+        "        \tABOUT ME\n"
+        "======================\n\n"
+        "Name      :  Subham Pathak\n"
+        "Year      :  3rd Year CSE\n"
+        "College   :  CIT Kokrajhar\n"
+        "Interests :  AI/ML, Backend Dev\n"
+        "Skills    :  Python, Flask, FastAPI,\n"
+        "             HTML, CSS, JS, ML, DL\n"
+        "GitHub    :  /github\n"
+        "Contact   :  lastw5232@gmail.com\n\n"
+        "======================\n"
+        "    Built with Python +\n"
+        "    pyTelegramBotAPI\n"
+        "======================"
+    )
+    bot.send_message(msg.chat.id, about_text)
+
+@bot.message_handler(commands=['github'])
+def cmd_github(msg):
+    bot.send_message(
+        msg.chat.id,
+        "GitHub Profile:\nhttps://github.com/itzsubham2006"
+    )
+
+@bot.message_handler(commands=['time'])
+def cmd_time(msg):
+    now = datetime.now()
+    bot.send_message(
+        msg.chat.id,
+        now.strftime("Date: %A, %d %B %Y\nTime: %I:%M:%S %p")
     )
 
 @bot.message_handler(commands=['notes'])
@@ -258,32 +293,6 @@ def handle_cb(call):
 
     bot.answer_callback_query(call.id)
 
-@bot.message_handler(func=lambda m: True)
-def handle_text(msg):
-    t = msg.text
-
-    if t == "Career":
-        show_career_menu(msg)
-    elif t == "Notes":
-        show_notes_menu(msg)
-    elif t == "GitHub":
-        bot.reply_to(msg, "My GitHub:\nhttps://github.com/itzsubham2006")
-    elif t == "Time":
-        now = datetime.now()
-        bot.reply_to(msg, now.strftime("%A, %d %B %Y\n%I:%M:%S %p"))
-    elif t == "About":
-        bot.reply_to(msg,
-            ">> Owner : Subham Pathak\n"
-            ">> 3rd year CSE\n"
-            ">> CIT Kokrajhar\n"
-            ">> AI/ML"
-        )
-    elif t == "Help":
-        cmd_help(msg)
-    else:
-        bot.reply_to(msg, "I dont understand. Type /help")
-
 print("Bot is running heheheheheeee...")
 bot.infinity_polling()
-
 
