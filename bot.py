@@ -118,7 +118,7 @@ subject_files = {
 def cmd_start(msg):
     bot.send_message(
         msg.chat.id,
-        "Hey, I am tele_bot :)\n\n"
+        "Hey, I am tele_bot made by Subham:)\n\n"
         "I can help you with:\n"
         "- Career roadmaps + resources  --> /career\n"
         "- Semester notes (PDFs)        --> /notes\n"
